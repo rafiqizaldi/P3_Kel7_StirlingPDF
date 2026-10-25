@@ -1,5 +1,16 @@
-# Aplikasi Web "XYZ"
+# Aplikasi Web "Stirling-PDF"
 
+**Proyek Komunikasi Data dan Jaringan Komputer (KDJK)**
+**Kelompok 7, Paralel 3**
+
+| Nama | NIM |
+| :-- | :-- |
+| Yoel Christopel Napitupulu | M0403241110 |
+| Valentino Pierre Rufinus Purimahua | M0403241114 |
+| Rafiqi Zaldi Riyatno | M0403241116 |
+| Gilang Muhamad Widiagung | M0403241117 |
+
+Situs yang berjalan: [https://pdf.gimiaw.web.id/](https://pdf.gimiaw.web.id/)
 
 ## Sekilas Tentang
 
