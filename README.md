@@ -175,7 +175,88 @@ Untuk menjalankan konversi dokumen office ⇄ PDF, digunakan image varian standa
 ## Cara Pemakaian
 
 - Tampilan aplikasi web
-- Fungsi-fungsi utama
+
+### Fungsi-fungsi Utama
+
+#### Recommended
+
+- **PDF Text Editor**: mengedit teks langsung di dalam PDF.
+- **Merge**: menggabungkan beberapa file PDF menjadi satu.
+- **Compare**: membandingkan dua PDF untuk melihat perbedaan isinya.
+- **Compress**: mengecilkan ukuran file PDF.
+- **Convert**: mengubah PDF ke format lain (Word, gambar, dll.) atau sebaliknya.
+- **OCR / Cleanup scans**: mengenali teks pada dokumen hasil scan agar bisa dicari dan disalin, sekaligus membersihkan hasil scan.
+- **Redact**: menghitamkan atau menghapus permanen informasi sensitif.
+- **PDF Multi Tool**: alat serbaguna untuk mengatur halaman (urutkan, putar, hapus, pisah, gabung) dalam satu tampilan.
+
+#### Signing
+
+- **Sign with Certificate**: menandatangani PDF dengan sertifikat digital.
+- **Timestamp PDF**: menambahkan cap waktu resmi sebagai bukti kapan dokumen ada.
+- **Sign**: membubuhkan tanda tangan (gambar, ketikan, atau coretan tangan).
+
+#### Document Security
+
+- **Add Password**: mengunci PDF dengan kata sandi.
+- **Add Watermark**: menambahkan teks atau gambar watermark.
+- **Add Stamp to PDF**: menambahkan stempel teks atau gambar.
+- **Sanitize**: membersihkan elemen tersembunyi (JavaScript, metadata, file tertanam) demi keamanan.
+- **Flatten**: meratakan formulir dan anotasi menjadi konten statis yang tidak bisa diedit.
+- **Unlock PDF Forms**: membuka kunci kolom formulir yang berstatus read-only.
+- **Change Permissions**: mengatur izin dokumen, misalnya melarang cetak, salin, atau edit.
+
+#### Verification
+
+- **Get ALL Info on PDF**: menampilkan seluruh informasi teknis PDF (metadata, ukuran, jumlah halaman, font, enkripsi, dll.).
+- **Validate PDF Signature**: memeriksa keabsahan tanda tangan digital pada PDF.
+
+#### Document Review
+
+- **Change Metadata**: mengubah metadata seperti judul, penulis, subjek, dan kata kunci.
+- **Edit Table of Contents**: membuat atau mengubah daftar isi/bookmark.
+- **Read**: membaca atau melihat PDF langsung di aplikasi.
+
+#### Page Formatting
+
+- **Crop PDF**: memotong area tepi halaman.
+- **Rotate**: memutar halaman secara manual.
+- **Auto Rotate**: memutar halaman otomatis sesuai orientasi teksnya.
+- **Split**: memecah satu PDF menjadi beberapa file.
+- **Reorganize Pages**: mengubah urutan halaman.
+- **Adjust page size/scale**: mengubah ukuran atau skala halaman (misalnya ke A4).
+- **Add Page Numbers**: menambahkan nomor halaman.
+- **Multi-Page Layout**: menyatukan beberapa halaman dalam satu lembar (misalnya 2 atau 4 halaman per lembar).
+- **Booklet Imposition**: menyusun halaman agar bisa dicetak bolak-balik dan dilipat menjadi buklet.
+- **PDF to Single Large Page**: menggabungkan semua halaman menjadi satu halaman panjang.
+- **Manage Attachments**: menambah, melihat, atau menghapus file yang terlampir di dalam PDF.
+- **Create Portfolio**: membuat PDF portfolio, yaitu satu wadah berisi banyak file.
+
+#### Extraction
+
+- **Extract Pages**: mengambil halaman tertentu menjadi PDF baru.
+- **Extract Images**: mengambil semua gambar yang ada di dalam PDF.
+
+#### Removal
+
+- **Remove Pages**: menghapus halaman tertentu.
+- **Remove Blank Pages**: menghapus halaman kosong secara otomatis.
+- **Remove Annotations**: menghapus komentar, sorotan, dan anotasi lainnya.
+- **Remove Image**: menghapus gambar dari PDF.
+- **Remove Password**: membuka proteksi kata sandi (Anda perlu mengetahui sandinya).
+- **Remove Certificate Sign**: menghapus tanda tangan sertifikat digital.
+
+#### Automation
+
+- **Auto Form Detection**: mendeteksi kolom formulir secara otomatis di PDF.
+- **Auto Rename PDF File**: mengganti nama file otomatis berdasarkan isi (misalnya judul di dalam dokumen).
+- **Automate**: membuat alur kerja beruntun, yaitu beberapa operasi dijalankan sekaligus.
+
+#### General
+
+- **Add Text**: menambahkan teks baru ke halaman.
+- **Add Image**: menyisipkan gambar ke halaman.
+- **Annotate**: memberi anotasi seperti sorotan, coretan, dan catatan.
+- **Form Editor**: membuat atau mengedit kolom formulir interaktif.
 - Isi dengan data real/dummy (jangan kosongan) dan sertakan beberapa screenshot
 
 ## Pembahasan
