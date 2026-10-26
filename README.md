@@ -24,7 +24,7 @@ Deskripsi singkat tentang aplikasi tsb.
 Aplikasi dideploy menggunakan arsitektur 3 lapis untuk efisiensi, keamanan, dan kemudahan akses:
 
 <p align="center">
-  <img src="docs/architecture.svg" alt="Arsitektur Deployment Stirling-PDF" width="100%"/>
+  <img src="docs/architecture.png" alt="Arsitektur Deployment Stirling-PDF" width="100%"/>
 </p>
 
 <details>
