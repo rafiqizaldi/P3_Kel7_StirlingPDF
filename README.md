@@ -1,7 +1,8 @@
-# Aplikasi Web "Stirling-PDF"
+<div align="center">
+  
+# Aplikasi Web Stirling-PDF
 
-**Proyek Komunikasi Data dan Jaringan Komputer (KDJK)**
-**Kelompok 7, Paralel 3**
+<img src="docs/stirling-pdf.png" width="200" alt="Logo Stirling-PDF">
 
 | Nama | NIM |
 | :-- | :-- |
@@ -10,11 +11,21 @@
 | Rafiqi Zaldi Riyatno | M0403241116 |
 | Gilang Muhamad Widiagung | M0403241117 |
 
+[Sekilas Tentang](#sekilas-tentang) | [Instalasi](#instalasi) | [Cara Pemakaian](#cara-pemakaian) | [Pembahasan](#pembahasan) | [Kesimpulan](#kesimpulan) | [Referensi](#referensi)
+:---:|:---:|:---:|:---:|:---:|:---:
+
+---
+
+</div>
+
 Situs yang berjalan: [https://pdf.gimiaw.web.id/](https://pdf.gimiaw.web.id/)
 
 ## Sekilas Tentang
 
-Deskripsi singkat tentang aplikasi tsb.
+
+**Stirling-PDF** adalah aplikasi web *open-source* untuk mengelola dan memanipulasi file PDF melalui antarmuka browser. Aplikasi ini menyediakan berbagai fitur, seperti menggabungkan dan memisahkan PDF, mengubah urutan halaman, mengompres file, mengonversi dokumen, serta menambahkan tanda air (*watermark*). Informasi mengenai perkembangan dan versi terbaru dapat dilihat melalui [repositori resmi Stirling-PDF](https://github.com/Stirling-Tools/Stirling-PDF).
+
+Pada versi *self-hosted*, Stirling-PDF dipasang dan dijalankan pada server yang dikelola sendiri sehingga pengguna dapat mengaksesnya melalui browser tanpa perlu menginstal aplikasi pengolah PDF di setiap perangkat. Pemrosesan dokumen dilakukan oleh server, sedangkan pengguna berinteraksi melalui antarmuka web. Dengan demikian, penggunaan aplikasi dapat dipusatkan pada satu layanan yang bisa diakses oleh beberapa pengguna sesuai konfigurasi server.
 
 
 ## Instalasi
@@ -161,28 +172,15 @@ cd /opt/stirling-pdf && docker compose restart
 ### 3. Konfigurasi Dukungan Konversi Dokumen Office (DOCX, PPTX, Excel)
 Untuk menjalankan konversi dokumen office ⇄ PDF, digunakan image varian standar (`frooodle/s-pdf:latest`) yang sudah memuat paket LibreOffice headless dan unoserver daemon. Dukungan ini memakan alokasi swap saat konversi berjalan di VPS 2 GB RAM.
 
-
-##  Maintenance (opsional)
-
-Setting tambahan untuk maintenance secara periodik, misalnya:
-- buat backup database tiap pekan
-- hapus direktori sampah tiap hari
-- dll
-
-
-## Otomatisasi (opsional)
-
-Skrip shell untuk otomatisasi instalasi, konfigurasi, dan maintenance.
-
 ## Cara Pemakaian
 
 - Tampilan aplikasi web
 - Fungsi-fungsi utama
 - Isi dengan data real/dummy (jangan kosongan) dan sertakan beberapa screenshot
 
-# Pembahasan
+## Pembahasan
  
-## Kelebihan
+### Kelebihan
  
 - **Gratis dan semua tool PDF dapat dipakai.** Menurut dokumentasi resmi, paket Free sudah mencakup seluruh tool PDF dan REST API. Paket berbayar hanya menambah fitur untuk skala organisasi, seperti SAML SSO, audit log, dan database eksternal.
 - **Data tetap di server sendiri.** Dokumen tidak diunggah ke layanan pihak ketiga, sehingga cocok untuk dokumen yang sensitif.
@@ -190,7 +188,7 @@ Skrip shell untuk otomatisasi instalasi, konfigurasi, dan maintenance.
 - **Fitur lengkap.** Ada 50+ operasi PDF, antara lain *merge*, *split*, kompresi, konversi dari/ke format Office, OCR, tanda tangan, dan *redact*.
 - **Pemasangan relatif mudah.** Cukup satu *container* Docker tanpa database eksternal, dan komunitasnya besar (sekitar 89 ribu *stars* di GitHub) sehingga panduan mudah ditemukan.
 
-## Kekurangan
+### Kekurangan
  
 - **Harus dikelola sendiri.** Pemasangan, pembaruan, *backup*, dan keamanan server menjadi tanggung jawab kita.
 - **Cukup berat untuk server kecil.** Aplikasinya berbasis Java sehingga membutuhkan sekitar 1-2 GB RAM atau lebih, dan varian *fat* (dengan LibreOffice dan OCR) disarankan minimal 2 GB.
@@ -198,7 +196,7 @@ Skrip shell untuk otomatisasi instalasi, konfigurasi, dan maintenance.
 - **Keamanan perlu diatur.** Pada beberapa panduan, instalasi awal berjalan tanpa login dan memakai kredensial bawaan, sehingga perlu diamankan sebelum dibuka ke internet.
 - **Hanya untuk PDF.** Kebutuhan gambar, video, atau audio memerlukan aplikasi lain.
  
-## Perbandingan dengan Aplikasi Sejenis
+### Perbandingan dengan Aplikasi Sejenis
  
 | Aspek | Stirling-PDF | SnapOtter | iLovePDF |
 |---|---|---|---|
