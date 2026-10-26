@@ -174,7 +174,11 @@ Untuk menjalankan konversi dokumen office ⇄ PDF, digunakan image varian standa
 
 ## Cara Pemakaian
 
-- Tampilan aplikasi web
+### Tampilan aplikasi web
+
+<p align="center">
+  <img src="docs/halamanapp.png" alt="Halaman aplikasi Stirling-PDF" width="80%"/>
+</p>
 
 ### Fungsi-fungsi Utama
 
