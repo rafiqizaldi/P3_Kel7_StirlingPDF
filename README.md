@@ -19,21 +19,152 @@ Deskripsi singkat tentang aplikasi tsb.
 
 ## Instalasi
 
-- Prasyarat, apa saja yang harus diinstal sebelumnya.
-- Langkah instalasi dalam CLI.
+### Arsitektur Deployment & Diagram Jaringan
 
+Aplikasi dideploy menggunakan arsitektur 3 lapis untuk efisiensi, keamanan, dan kemudahan akses:
 
-## Konfigurasi (opsional)
+```mermaid
+%%{init: {
+  'theme': 'neutral',
+  'flowchart': {
+    'curve': 'linear'
+  }
+}}%%
+flowchart LR
+    User["<img src='https://cdn.simpleicons.org/googlechrome/4285F4' width='36'/><br/><b>Client / Browser</b><br/>End User"]
 
-Setting server tambahan yang diperlukan untuk meningkatkan fungsi dan kinerja aplikasi, misalnya:
-- batas upload file
-- batas memori
-- dll
+    subgraph CloudflareEdge ["Edge Layer (Cloudflare)"]
+        CF["<img src='https://cdn.simpleicons.org/cloudflare/F38020' width='36'/><br/><b>Cloudflare CDN & DNS</b><br/>pdf.gimiaw.web.id<br/>SSL Termination"]
+    end
 
-Plugin untuk fungsi tambahan
-- login dengan Google/Facebook
-- editor Markdown
-- dll
+    subgraph VPSHost ["Host VPS Ubuntu 24.04 (43.133.129.209)"]
+        direction LR
+        NGINX["<img src='https://cdn.simpleicons.org/nginx/009639' width='36'/><br/><b>Nginx Reverse Proxy</b><br/>Port :80<br/>Max Body: 100M"]
+        
+        SPDF["<img src='https://cdn.simpleicons.org/docker/2496ED' width='36'/><br/><b>Stirling-PDF Container</b><br/>frooodle/s-pdf:latest<br/>Port 127.0.0.1:8082"]
+        
+        VOL[("<img src='https://cdn.simpleicons.org/databricks/FF3621' width='32'/><br/><b>Host Storage</b><br/>/opt/stirling-pdf/")]
+    end
+
+    User -->|"HTTPS (443)"| CF
+    CF -->|"HTTP (80)"| NGINX
+    NGINX -->|"Proxy Pass"| SPDF
+    SPDF ---|"Bind Mount"| VOL
+```
+
+1. **Cloudflare (Edge/DNS & SSL/TLS)**: Menangani manajemen domain `gimiaw.web.id`, proxy CDN, perlindungan DDoS, dan terminasi SSL/TLS (HTTPS) secara gratis tanpa perlu setup certbot manual di server.
+2. **Nginx (Host Reverse Proxy)**: Menerima trafik HTTP (port 80) dari Cloudflare, meneruskan request ke port lokal container, serta mengatur batas ukuran payload unggahan (`client_max_body_size`) dan timeout pemrosesan.
+3. **Docker Engine & Compose (Container Runtime)**: Mengisolasi aplikasi Stirling-PDF beserta dependensinya (Java runtime, LibreOffice headless, dan daemon unoserver) di lingkungan kontainer terisolasi yang di-bind ke loopback interface host (`127.0.0.1:8082`).
+
+### Prasyarat
+- **Server/VPS**: Ubuntu 24.04 LTS (RAM 2 GB, CPU 1-2 vCPU, Disk sisa minimal 10 GB)
+- **Akses**: Root / Sudo melalui SSH
+- **Software**: Docker Engine, Docker Compose Plugin, Nginx Web Server
+- **Akun & Domain**: Domain aktif di Cloudflare (`gimiaw.web.id`)
+
+### Langkah Instalasi
+
+#### 1. Setup DNS & SSL di Cloudflare
+1. Masuk ke dashboard Cloudflare dan buka menu domain `gimiaw.web.id`.
+2. Masuk ke tab **DNS** > **Records**, lalu tambahkan A Record baru:
+   - **Type**: `A`
+   - **Name**: `pdf`
+   - **IPv4 Address**: `<IP_PUBLIC_VPS>` (misal: `43.133.129.209`)
+   - **Proxy Status**: `Proxied` (awan oranye aktif untuk enkripsi otomatis dan proteksi IP)
+3. Masuk ke tab **SSL/TLS** > **Overview**, pastikan enkripsi diatur ke mode **Flexible** (koneksi klien ke Cloudflare terenkripsi HTTPS, koneksi Cloudflare ke VPS via port 80 HTTP).
+
+#### 2. Persiapan Server & Instalasi Docker + Nginx
+Jalankan di terminal VPS:
+```bash
+# Update sistem dan install dependencies
+apt update && apt upgrade -y
+apt install -y docker.io docker-compose-v2 nginx curl
+systemctl enable --now docker nginx
+```
+
+#### 3. Setup Struktur Direktori & Persistensi
+```bash
+mkdir -p /opt/stirling-pdf/trainingData \
+         /opt/stirling-pdf/extraConfigs \
+         /opt/stirling-pdf/customFiles \
+         /opt/stirling-pdf/logs
+cd /opt/stirling-pdf
+```
+
+#### 4. Pembuatan File `docker-compose.yml`
+```bash
+cat << 'EOF' > /opt/stirling-pdf/docker-compose.yml
+services:
+  stirling-pdf:
+    image: frooodle/s-pdf:latest
+    container_name: stirling-pdf
+    ports:
+      - '127.0.0.1:8082:8080'
+    volumes:
+      - ./trainingData:/usr/share/tessdata
+      - ./extraConfigs:/configs
+      - ./customFiles:/customFiles
+      - ./logs:/logs
+    environment:
+      - DOCKER_ENABLE_SECURITY=false
+      - INSTALL_BOOK_AND_ADVANCED_HTML_OPS=false
+      - LANGS=en_GB
+    restart: unless-stopped
+EOF
+```
+*Catatan Port: Port aplikasi dalam container (`8080`) diekspos hanya ke loopback lokal host (`127.0.0.1:8082`). Ini mencegah akses langsung dari luar tanpa melewati Nginx proxy.*
+
+#### 5. Menjalankan Container
+```bash
+cd /opt/stirling-pdf
+docker compose up -d
+```
+
+---
+
+## Konfigurasi
+
+### 1. Reverse Proxy Nginx & Penyesuaian Upload Limit
+Agar aplikasi dapat diakses via subdomain `pdf.gimiaw.web.id` dan mampu mengolah berkas PDF berukuran besar, konfigurasi Nginx diterapkan dengan batas body request hingga 100 MB:
+
+```bash
+cat << 'EOF' > /etc/nginx/sites-available/pdf.gimiaw.web.id
+server {
+    listen 80;
+    server_name pdf.gimiaw.web.id;
+
+    # Batas ukuran upload dokumen PDF
+    client_max_body_size 100M;
+
+    location / {
+        proxy_pass http://127.0.0.1:8082;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # Timeout dinaikkan agar konversi/OCR dokumen besar tidak putus
+        proxy_read_timeout 300s;
+        proxy_connect_timeout 300s;
+    }
+}
+EOF
+
+# Aktifkan konfigurasi dan reload service Nginx
+ln -sf /etc/nginx/sites-available/pdf.gimiaw.web.id /etc/nginx/sites-enabled/
+nginx -t && systemctl reload nginx
+```
+
+### 2. Konfigurasi Autentikasi (Akses Publik Tanpa Login)
+Secara default pada versi terbaru (v3+), Stirling-PDF mewajibkan setup password admin saat pertama kali dijalankan. Untuk akses langsung tanpa sistem akun:
+
+```bash
+sed -i 's/enableLogin: true/enableLogin: false/g' /opt/stirling-pdf/extraConfigs/settings.yml
+cd /opt/stirling-pdf && docker compose restart
+```
+
+### 3. Konfigurasi Dukungan Konversi Dokumen Office (DOCX, PPTX, Excel)
+Untuk menjalankan konversi dokumen office ⇄ PDF, digunakan image varian standar (`frooodle/s-pdf:latest`) yang sudah memuat paket LibreOffice headless dan unoserver daemon. Dukungan ini memakan alokasi swap saat konversi berjalan di VPS 2 GB RAM.
 
 
 ##  Maintenance (opsional)
