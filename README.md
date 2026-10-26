@@ -23,35 +23,29 @@ Deskripsi singkat tentang aplikasi tsb.
 
 Aplikasi dideploy menggunakan arsitektur 3 lapis untuk efisiensi, keamanan, dan kemudahan akses:
 
+<p align="center">
+  <img src="docs/architecture.svg" alt="Arsitektur Deployment Stirling-PDF" width="100%"/>
+</p>
+
+<details>
+<summary>Lihat Kode Diagram Mermaid</summary>
+
 ```mermaid
 %%{init: {'flowchart': {'curve': 'linear'}}}%%
 flowchart LR
-    User["<b>Client / Browser</b><br/>End User"]
-
-    subgraph CloudflareEdge ["Edge Layer (Cloudflare)"]
-        CF["<b>Cloudflare Proxy & DNS</b><br/>pdf.gimiaw.web.id<br/>SSL Termination"]
-    end
-
-    subgraph VPSHost ["Host VPS Ubuntu 24.04 (43.133.129.209)"]
-        direction LR
-        NGINX["<b>Nginx Reverse Proxy</b><br/>Port :80<br/>client_max_body_size 100M"]
-        SPDF["<b>Docker: stirling-pdf</b><br/>frooodle/s-pdf:latest<br/>Internal: 127.0.0.1:8082"]
-        VOL[("<b>Host Storage</b><br/>/opt/stirling-pdf/")]
-    end
+    User["Client / Browser"]
+    CF["Cloudflare Proxy & DNS<br/>pdf.gimiaw.web.id"]
+    NGINX["Nginx Reverse Proxy<br/>Port 80"]
+    SPDF["Docker: stirling-pdf<br/>Port 127.0.0.1:8082"]
+    VOL[("Host Storage<br/>/opt/stirling-pdf/")]
 
     User -->|"HTTPS (443)"| CF
     CF -->|"HTTP (80)"| NGINX
     NGINX -->|"proxy_pass"| SPDF
     SPDF ---|"volumes"| VOL
-
-    classDef edge fill:#1e293b,stroke:#f59e0b,stroke-width:1px,color:#f8fafc;
-    classDef host fill:#1e293b,stroke:#0ea5e9,stroke-width:1px,color:#f8fafc;
-    classDef storage fill:#1e293b,stroke:#64748b,stroke-width:1px,color:#f8fafc;
-
-    class CF edge;
-    class NGINX,SPDF host;
-    class VOL storage;
 ```
+
+</details>
 
 1. **Cloudflare (Edge/DNS & SSL/TLS)**: Menangani manajemen domain `gimiaw.web.id`, proxy CDN, perlindungan DDoS, dan terminasi SSL/TLS (HTTPS) secara gratis tanpa perlu setup certbot manual di server.
 2. **Nginx (Host Reverse Proxy)**: Menerima trafik HTTP (port 80) dari Cloudflare, meneruskan request ke port lokal container, serta mengatur batas ukuran payload unggahan (`client_max_body_size`) dan timeout pemrosesan.
