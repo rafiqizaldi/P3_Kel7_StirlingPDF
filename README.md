@@ -261,7 +261,7 @@ Untuk menjalankan konversi dokumen office ⇄ PDF, digunakan image varian standa
 - **Add Image**: menyisipkan gambar ke halaman.
 - **Annotate**: memberi anotasi seperti sorotan, coretan, dan catatan.
 - **Form Editor**: membuat atau mengedit kolom formulir interaktif.
-- Isi dengan data real/dummy (jangan kosongan) dan sertakan beberapa screenshot
+
 
 ## Pembahasan
  
