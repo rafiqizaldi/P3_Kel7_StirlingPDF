@@ -24,32 +24,33 @@ Deskripsi singkat tentang aplikasi tsb.
 Aplikasi dideploy menggunakan arsitektur 3 lapis untuk efisiensi, keamanan, dan kemudahan akses:
 
 ```mermaid
-%%{init: {
-  'theme': 'neutral',
-  'flowchart': {
-    'curve': 'linear'
-  }
-}}%%
+%%{init: {'flowchart': {'curve': 'linear'}}}%%
 flowchart LR
-    User["<img src='https://cdn.simpleicons.org/googlechrome/4285F4' width='36'/><br/><b>Client / Browser</b><br/>End User"]
+    User["<b>Client / Browser</b><br/>End User"]
 
     subgraph CloudflareEdge ["Edge Layer (Cloudflare)"]
-        CF["<img src='https://cdn.simpleicons.org/cloudflare/F38020' width='36'/><br/><b>Cloudflare CDN & DNS</b><br/>pdf.gimiaw.web.id<br/>SSL Termination"]
+        CF["<b>Cloudflare Proxy & DNS</b><br/>pdf.gimiaw.web.id<br/>SSL Termination"]
     end
 
     subgraph VPSHost ["Host VPS Ubuntu 24.04 (43.133.129.209)"]
         direction LR
-        NGINX["<img src='https://cdn.simpleicons.org/nginx/009639' width='36'/><br/><b>Nginx Reverse Proxy</b><br/>Port :80<br/>Max Body: 100M"]
-        
-        SPDF["<img src='https://cdn.simpleicons.org/docker/2496ED' width='36'/><br/><b>Stirling-PDF Container</b><br/>frooodle/s-pdf:latest<br/>Port 127.0.0.1:8082"]
-        
-        VOL[("<img src='https://cdn.simpleicons.org/databricks/FF3621' width='32'/><br/><b>Host Storage</b><br/>/opt/stirling-pdf/")]
+        NGINX["<b>Nginx Reverse Proxy</b><br/>Port :80<br/>client_max_body_size 100M"]
+        SPDF["<b>Docker: stirling-pdf</b><br/>frooodle/s-pdf:latest<br/>Internal: 127.0.0.1:8082"]
+        VOL[("<b>Host Storage</b><br/>/opt/stirling-pdf/")]
     end
 
     User -->|"HTTPS (443)"| CF
     CF -->|"HTTP (80)"| NGINX
-    NGINX -->|"Proxy Pass"| SPDF
-    SPDF ---|"Bind Mount"| VOL
+    NGINX -->|"proxy_pass"| SPDF
+    SPDF ---|"volumes"| VOL
+
+    classDef edge fill:#1e293b,stroke:#f59e0b,stroke-width:1px,color:#f8fafc;
+    classDef host fill:#1e293b,stroke:#0ea5e9,stroke-width:1px,color:#f8fafc;
+    classDef storage fill:#1e293b,stroke:#64748b,stroke-width:1px,color:#f8fafc;
+
+    class CF edge;
+    class NGINX,SPDF host;
+    class VOL storage;
 ```
 
 1. **Cloudflare (Edge/DNS & SSL/TLS)**: Menangani manajemen domain `gimiaw.web.id`, proxy CDN, perlindungan DDoS, dan terminasi SSL/TLS (HTTPS) secara gratis tanpa perlu setup certbot manual di server.
